@@ -4,6 +4,7 @@ import {
   createCheckboxes,
   createIfcTreeMenu,
   createIfcPropertyMenu,
+  createVersionControlPanel,
   toolbarBottom,
   toolbarTop,
   createHelpInfo,
@@ -26,6 +27,11 @@ import {
   IFCROOF,
   IFCBUILDINGELEMENTPROXY,
 } from "web-ifc";
+
+// import * as OBC from 'openbim-components';
+
+
+import { Vector3, Vector4 } from "three";
 
 // List of categories names
 const categories = {
@@ -62,6 +68,20 @@ async function ViewerLoadIfc(viewer, url) {
   model.removeFromParent();
   return model;
 }
+
+// const container = document.getElementById('container');
+
+// const components = new OBC.Components();
+
+// components.scene = new OBC.SimpleScene(components);
+// const renderer = new OBC.PostproductionRenderer(components, container);
+// components.renderer = renderer;
+// components.camera = new OBC.SimpleCamera(components);
+// components.raycaster = new OBC.SimpleRaycaster(components);
+
+// components.init();
+
+// renderer.postproduction.enabled = true;
 
 const currentUrl = window.location.href;
 const url = new URL(currentUrl);
@@ -115,12 +135,31 @@ const propsGUI = document.getElementById("ifc-property-menu-root");
 createIfcTreeMenu();
 createCheckboxes();
 createHelpInfo();
+createVersionControlPanel();
 toolbarTop();
 toolbarBottom();
 
+var vec3 = new Vector3(); // create once and reuse it!
+var vec4 = new Vector4();
+
 //select IFC elements
-window.onmousemove = () => viewer.IFC.selector.prePickIfcItem();
-window.onmousemove = () => console.log(viewer.context.ifcCamera);
+// window.onmousemove = () => viewer.IFC.selector.prePickIfcItem();
+window.onmousemove = () => {
+  // const curVec = viewer.context.ifcCamera.cameraControls._camera.getWorldDirection(vector);
+  
+  // viewer2.grid.dispose();
+  viewer2.IFC.selector.unHighlightIfcItems();
+  
+
+  const vecView = viewer.context.ifcCamera.cameraControls.getPosition(vec3);
+  viewer2.context.ifcCamera.cameraControls.setLookAt(vecView.x, vecView.y, vecView.z, 0,0,0);
+
+} 
+
+window.onauxclick = () => {
+  viewer2.IFC.selector.unHighlightIfcItems();
+}
+  
 
 const spans = document.querySelectorAll("span.caret");
 
@@ -149,6 +188,11 @@ window.ondblclick = async () => {
     viewer.dimensions.create();
   }
 };
+
+// const xrayButton = document.getElementById("XRayButton");
+// xrayButton.onclick = () => {
+
+// }
 
 //set up clipping planes
 const clipButton = document.getElementById("clipPlaneButton");

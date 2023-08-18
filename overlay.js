@@ -37,6 +37,7 @@ export function toolbarBottom() {
   const toolbar = document.createElement("div");
   toolbar.className = "toolbar";
 
+  toolbar.appendChild(XRayButton());
   toolbar.appendChild(versionControlButton());
   toolbar.appendChild(treeButton());
   toolbar.appendChild(filterButton());
@@ -57,6 +58,7 @@ function checkbox(category, text) {
   checkbox.className = "checkbox-item";
 
   const checkboxTextDiv = document.createElement("div");
+  checkboxTextDiv.style = "flex-grow: 1";
 
   const checkboxInput = document.createElement("input");
   checkboxTextDiv.textContent = text;
@@ -278,9 +280,224 @@ function clipPlaneButton() {
   return clipPlaneButton;
 }
 
+function XRayButton() {
+  const XRayButton = document.createElement("button");
+  XRayButton.className = "button";
+  XRayButton.id = "XRayButton";
+
+  const svgEl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svgEl.setAttribute("width", "15");
+  svgEl.setAttribute("height", "15");
+  svgEl.setAttribute("viewBox", "0 0 60 60");
+  svgEl.setAttribute("fill", "#000000");
+  // svgEl.setAttribute("transform", "rotate(270 0 0)");
+  const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path1.setAttribute(
+    "d",
+    "M52,0v3c-0.553,0-1,0.447-1,1s0.447,1,1,1v3h3c0,0.553,0.447,1,1,1s1-0.447,1-1h3V0H52z M58,6h-4V2h4V6z"
+  );
+
+  const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path2.setAttribute(
+    "d",
+    "M5,22c0-0.553-0.447-1-1-1s-1,0.447-1,1v1c0,0.553,0.447,1,1,1s1-0.447,1-1V22z"
+  );
+  const path3 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path3.setAttribute(
+    "d",
+    "M4,46c-0.553,0-1,0.447-1,1v1c0,0.553,0.447,1,1,1s1-0.447,1-1v-1C5,46.447,4.553,46,4,46z"
+  );
+
+  const path4 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path4.setAttribute(
+    "d",
+    "M5,12c0-0.553-0.447-1-1-1s-1,0.447-1,1v1c0,0.553,0.447,1,1,1s1-0.447,1-1V12z"
+  );
+  const path5 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path5.setAttribute(
+    "d",
+    "M5,27c0-0.553-0.447-1-1-1s-1,0.447-1,1v1c0,0.553,0.447,1,1,1s1-0.447,1-1V27z"
+  );
+
+  const path6 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path6.setAttribute(
+    "d",
+    "M4,9c0.553,0,1-0.447,1-1h3V5c0.553,0,1-0.447,1-1S8.553,3,8,3V0H0v8h3C3,8.553,3.447,9,4,9z M2,6V2h4v4H2z"
+  );
+  const path7 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path7.setAttribute(
+    "d",
+    "M5,42c0-0.553-0.447-1-1-1s-1,0.447-1,1v1c0,0.553,0.447,1,1,1s1-0.447,1-1V42z"
+  );
+
+  const path8 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path8.setAttribute(
+    "d",
+    "M5,32c0-0.553-0.447-1-1-1s-1,0.447-1,1v1c0,0.553,0.447,1,1,1s1-0.447,1-1V32z"
+  );
+  const path9 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path9.setAttribute(
+    "d",
+    "M5,37c0-0.553-0.447-1-1-1s-1,0.447-1,1v1c0,0.553,0.447,1,1,1s1-0.447,1-1V37z"
+  );
+
+  const path10 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path10.setAttribute(
+    "d",
+    "M5,17c0-0.553-0.447-1-1-1s-1,0.447-1,1v1c0,0.553,0.447,1,1,1s1-0.447,1-1V17z"
+  );
+  const path11 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path11.setAttribute(
+    "d",
+    "M22,5h1c0.553,0,1-0.447,1-1s-0.447-1-1-1h-1c-0.553,0-1,0.447-1,1S21.447,5,22,5z"
+  );
+
+  const path12 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path12.setAttribute(
+    "d",
+    "M12,5h1c0.553,0,1-0.447,1-1s-0.447-1-1-1h-1c-0.553,0-1,0.447-1,1S11.447,5,12,5z"
+  );
+  const path13 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path13.setAttribute(
+    "d",
+    "M17,5h1c0.553,0,1-0.447,1-1s-0.447-1-1-1h-1c-0.553,0-1,0.447-1,1S16.447,5,17,5z"
+  );
+
+  const path14 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path14.setAttribute(
+    "d",
+    "M27,5h1c0.553,0,1-0.447,1-1s-0.447-1-1-1h-1c-0.553,0-1,0.447-1,1S26.447,5,27,5z"
+  );
+  const path15 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path15.setAttribute(
+    "d",
+    "M32,5h1c0.553,0,1-0.447,1-1s-0.447-1-1-1h-1c-0.553,0-1,0.447-1,1S31.447,5,32,5z"
+  );
+
+  const path16 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path16.setAttribute(
+    "d",
+    "M47,5h1c0.553,0,1-0.447,1-1s-0.447-1-1-1h-1c-0.553,0-1,0.447-1,1S46.447,5,47,5z"
+  );
+  const path17 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path17.setAttribute(
+    "d",
+    "M37,5h1c0.553,0,1-0.447,1-1s-0.447-1-1-1h-1c-0.553,0-1,0.447-1,1S36.447,5,37,5z"
+  );
+
+  const path18 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path18.setAttribute(
+    "d",
+    "M42,5h1c0.553,0,1-0.447,1-1s-0.447-1-1-1h-1c-0.553,0-1,0.447-1,1S41.447,5,42,5z"
+  );
+  const path19 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path19.setAttribute(
+    "d",
+    "M56,14c0.553,0,1-0.447,1-1v-1c0-0.553-0.447-1-1-1s-1,0.447-1,1v1C55,13.553,55.447,14,56,14z"
+  );
+
+  const path20 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path20.setAttribute(
+    "d",
+    "M55,23c0,0.553,0.447,1,1,1s1-0.447,1-1v-1c0-0.553-0.447-1-1-1s-1,0.447-1,1V23z"
+  );
+  const path21 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path21.setAttribute(
+    "d",
+    "M56,51c-0.553,0-1,0.447-1,1h-1.318L45,29.811V23h-8v3H23v-3h-8v6.811L6.317,52H5c0-0.553-0.447-1-1-1s-1,0.447-1,1H0v8h8v-3h44v3h8v-8h-3C57,51.447,56.553,51,56,51z M39,25h4v4h-4v-3V25z M17,25h4v1v3h-4V25z M6,58H2v-4h4v3V58z M8,55v-1.812L16.683,31		H23v-3h14v3h6.317L52,53.188V55H8z M58,54v4h-4v-1v-3H58z"
+  );
+
+  const path22 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path22.setAttribute(
+    "d",
+    "M55,18c0,0.553,0.447,1,1,1s1-0.447,1-1v-1c0-0.553-0.447-1-1-1s-1,0.447-1,1V18z"
+  );
+  const path23 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path23.setAttribute(
+    "d",
+    "M55,28c0,0.553,0.447,1,1,1s1-0.447,1-1v-1c0-0.553-0.447-1-1-1s-1,0.447-1,1V28z"
+  );
+
+  const path24 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path24.setAttribute(
+    "d",
+    "M55,38c0,0.553,0.447,1,1,1s1-0.447,1-1v-1c0-0.553-0.447-1-1-1s-1,0.447-1,1V38z"
+  );
+  const path25 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path25.setAttribute(
+    "d",
+    "M55,48c0,0.553,0.447,1,1,1s1-0.447,1-1v-1c0-0.553-0.447-1-1-1s-1,0.447-1,1V48z"
+  );
+
+  const path26 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path26.setAttribute(
+    "d",
+    "M55,43c0,0.553,0.447,1,1,1s1-0.447,1-1v-1c0-0.553-0.447-1-1-1s-1,0.447-1,1V43z"
+  );
+  const path27 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path27.setAttribute(
+    "d",
+    "M55,33c0,0.553,0.447,1,1,1s1-0.447,1-1v-1c0-0.553-0.447-1-1-1s-1,0.447-1,1V33z"
+  );
+
+  svgEl.appendChild(path1);
+  svgEl.appendChild(path2);
+  svgEl.appendChild(path3);
+  svgEl.appendChild(path4);
+  svgEl.appendChild(path5);
+  svgEl.appendChild(path6);
+  svgEl.appendChild(path7);
+  svgEl.appendChild(path8);
+  svgEl.appendChild(path9);
+  svgEl.appendChild(path10);
+  svgEl.appendChild(path11);
+  svgEl.appendChild(path12);
+  svgEl.appendChild(path13);
+  svgEl.appendChild(path14);
+  svgEl.appendChild(path15);
+  svgEl.appendChild(path16);
+  svgEl.appendChild(path17);
+  svgEl.appendChild(path18);
+  svgEl.appendChild(path19);
+  svgEl.appendChild(path20);
+  svgEl.appendChild(path21);
+  svgEl.appendChild(path22);
+  svgEl.appendChild(path23);
+  svgEl.appendChild(path24);
+  svgEl.appendChild(path25);
+  svgEl.appendChild(path26);
+  svgEl.appendChild(path27);
+
+
+  XRayButton.appendChild(svgEl);
+
+  // XRayButton.addEventListener(
+  //   "click",
+  //   function () {
+  //     if (
+  //       document.getElementById("ifc-version-control-menu").style.display === "block"
+  //     ) {
+  //       document.getElementById("ifc-version-control-menu").style.display = "none";
+  //       XRayButton.classList.remove("active");
+  //       // document.getElementById("ifc-version-control-menu").innerHTML = "";
+  //     } else if (
+  //       document.getElementById("ifc-version-control-menu").style.display === "none"
+  //     ) {
+  //       document.getElementById("ifc-version-control-menu").style.display = "block";
+  //       // document.getElementById("ifc-version-control-menu").style.width = "47%";
+  //       XRayButton.classList.add("active");
+  //     }
+  //   },
+  //   false
+  // );
+
+  return XRayButton;
+}
+
 function versionControlButton() {
   const versionControlButton = document.createElement("button");
   versionControlButton.className = "button";
+  versionControlButton.id = "versionControlButton";
 
   const svgEl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svgEl.setAttribute("width", "15");
@@ -310,16 +527,16 @@ function versionControlButton() {
     "click",
     function () {
       if (
-        document.getElementById("viewer-container-left").style.display === "block"
+        document.getElementById("ifc-version-control-menu").style.display === "block"
       ) {
-        document.getElementById("viewer-container-left").style.display = "none";
+        document.getElementById("ifc-version-control-menu").style.display = "none";
         versionControlButton.classList.remove("active");
-        document.getElementById("viewer-container-left").innerHTML = "";
+        // document.getElementById("ifc-version-control-menu").innerHTML = "";
       } else if (
-        document.getElementById("viewer-container-left").style.display === "none"
+        document.getElementById("ifc-version-control-menu").style.display === "none"
       ) {
-        document.getElementById("viewer-container-left").style.display = "block";
-        document.getElementById("viewer-container-left").style.width = "47%";
+        document.getElementById("ifc-version-control-menu").style.display = "block";
+        // document.getElementById("ifc-version-control-menu").style.width = "47%";
         versionControlButton.classList.add("active");
       }
     },
@@ -428,6 +645,43 @@ function helpButton() {
   };
 
   return helpButton;
+}
+
+export function createVersionControlPanel() {
+  const versionControlDiv = document.createElement("div");
+  versionControlDiv.className = "ifc-version-control-menu";
+  versionControlDiv.id = "ifc-version-control-menu";
+  versionControlDiv.style.display = "none";
+
+  const myTable = document.createElement("table");
+  myTable.id = "version-table";
+  
+  const thead = document.createElement("thead");
+  
+  const tr = document.createElement("tr");
+  
+  const nameHead = document.createElement("th");
+  nameHead.className = "text-center";
+  nameHead.innerHTML = "Model Name";
+  nameHead.style = "width:70%";
+  const versionHead = document.createElement("th");
+  versionHead.className = "text-center";
+  versionHead.innerHTML = "Version";
+  versionHead.style = "width:20%";
+  const dateHead = document.createElement("th");
+  dateHead.className = "text-center";
+  dateHead.innerHTML = "Date";
+
+  tr.appendChild(nameHead);
+  tr.appendChild(versionHead);
+  tr.appendChild(dateHead);
+
+  thead.appendChild(tr);
+  myTable.appendChild(thead);
+
+  versionControlDiv.appendChild(myTable);
+
+  document.body.appendChild(versionControlDiv);
 }
 
 export function createIfcTreeMenu() {

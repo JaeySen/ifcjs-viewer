@@ -299,7 +299,7 @@ a {
 }
 
 .checkbox-value {
-    width: 100%;
+    width: 10%;
     text-align: right;
 }
 
@@ -317,6 +317,22 @@ a {
     /* border-radius: 45px; */
     z-index: 1;
     width: 25%;
+}
+
+.ifc-version-control-menu {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    overflow-y: scroll;
+    /* background-color: white; */
+    height: 30vh;
+    padding: 50px 200px; 
+    background: var(--translucent-white);
+    backdrop-filter: var(--blur-filter);
+    border: none;
+    /* border-radius: 45px; */
+    /* z-index: 1; */
+    width: 100%;
 }
 
 li ul {
