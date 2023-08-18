@@ -19,4 +19,12 @@ export const projects = [
     name: "rac_basic_sample_project",
     id: "3014657",
   },
+  {
+    name: "47L",
+    id: "12313123"
+  }, 
+  {
+    name: "SPAHOTEL",
+    id: "2029292"
+  }
 ];

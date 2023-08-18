@@ -43,14 +43,25 @@ const categories = {
   IFCBUILDINGELEMENTPROXY,
 };
 
-const container = document.getElementById("viewer-container");
-const viewer = new IfcViewerAPI({
-  container,
-  backgroundColor: new Color(255, 255, 255),
-});
+const viewer = CreateViewer(document.getElementById("viewer-container"));
+const viewer2 = CreateViewer(document.getElementById("viewer-container2"));
 
-viewer.axes.setAxes();
-viewer.grid.setGrid();
+function CreateViewer(container) {
+  let viewer = new IfcViewerAPI({ container, backgroundColor: new Color(255, 255, 255) });
+  viewer.axes.setAxes();
+  viewer.grid.setGrid();
+
+  return viewer;
+}
+
+async function ViewerLoadIfc(viewer, url) {
+  const model = await viewer.IFC.loadIfcUrl(url);
+  await viewer.shadowDropper.renderShadow(model.modelID);
+  viewer.context.renderer.postProduction.active = true;
+
+  model.removeFromParent();
+  return model;
+}
 
 const currentUrl = window.location.href;
 const url = new URL(currentUrl);
@@ -60,11 +71,19 @@ async function loadIfc(url) {
   // Load the model
   const model = await viewer.IFC.loadIfcUrl(url);
 
-  // Add dropped shadow and post-processing efect
   await viewer.shadowDropper.renderShadow(model.modelID);
   viewer.context.renderer.postProduction.active = true;
 
   model.removeFromParent(); //for ifc categories filter
+
+  const model2 = await viewer2.IFC.loadIfcUrl(url);
+
+  await viewer2.shadowDropper.renderShadow(model2.modelID);
+  viewer2.context.renderer.postProduction.active = true;
+
+  // model2.removeFromParent(); //for ifc categories filter
+
+  // console.log(viewer, viewer2);
 
   const ifcProject = await viewer.IFC.getSpatialStructure(model.modelID);
 
@@ -101,6 +120,15 @@ toolbarBottom();
 
 //select IFC elements
 window.onmousemove = () => viewer.IFC.selector.prePickIfcItem();
+window.onmousemove = () => console.log(viewer.context.ifcCamera);
+
+const spans = document.querySelectorAll("span.caret");
+
+for (const span of spans) {
+  span.addEventListener("click", (event) => {
+    console.log(event)
+  })
+}
 
 window.ondblclick = async () => {
   const result = await viewer.IFC.selector.pickIfcItem(); //highlightIfcItem hides all other elements
@@ -279,6 +307,13 @@ function createNestedChild(parent, node) {
   createTitle(root, content);
   const childrenContainer = document.createElement("ul");
   childrenContainer.classList.add("nested");
+  const checkboxDiv = document.createElement("div");
+  checkboxDiv.style = "display: inline-block; padding: 0 5px"
+  const hideCheckbox = document.createElement("input");
+  hideCheckbox.setAttribute("type", "checkbox");
+  hideCheckbox.setAttribute("checked", true);
+  checkboxDiv.appendChild(hideCheckbox);
+  root.appendChild(checkboxDiv);
   root.appendChild(childrenContainer);
   parent.appendChild(root);
   return childrenContainer;

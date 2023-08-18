@@ -137,6 +137,7 @@ a {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 0 10px;
 }
 
 .card * {
@@ -315,7 +316,7 @@ a {
     border: none;
     /* border-radius: 45px; */
     z-index: 1;
-
+    width: 25%;
 }
 
 li ul {
@@ -369,8 +370,19 @@ ul, #myUL {
     top: 0;
     left: 0;
     outline: none;
-    width: 100%;
+    width: 50%;
     height: 100%;
+    overflow: hidden;
+}
+
+#viewer-container2 {
+    position: fixed;
+    top: 0;
+    right: 0;
+    outline: none;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
 }
   
 .ifcjs-dimension-preview {
@@ -398,3 +410,18 @@ ul, #myUL {
     align-items: center;
     background-color: transparent;
 }
+
+/* input[type="checkbox"] {
+    padding: 0 5px;
+} */
+
+canvas + div {
+    width: 50% !important;
+}
+
+/* #layer-toolbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+} */

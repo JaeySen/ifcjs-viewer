@@ -1,5 +1,7 @@
 //UI functions
 
+// const document.body = document.getElementById("layer-toolbar");
+
 export function modelName(modelName) {
   const modelNameContainer = document.createElement("div");
   modelNameContainer.className = "simple-card-container top";
@@ -35,6 +37,7 @@ export function toolbarBottom() {
   const toolbar = document.createElement("div");
   toolbar.className = "toolbar";
 
+  toolbar.appendChild(versionControlButton());
   toolbar.appendChild(treeButton());
   toolbar.appendChild(filterButton());
   toolbar.appendChild(clipPlaneButton());
@@ -275,6 +278,57 @@ function clipPlaneButton() {
   return clipPlaneButton;
 }
 
+function versionControlButton() {
+  const versionControlButton = document.createElement("button");
+  versionControlButton.className = "button";
+
+  const svgEl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svgEl.setAttribute("width", "15");
+  svgEl.setAttribute("height", "15");
+  svgEl.setAttribute("viewBox", "0 0 15 15");
+  svgEl.setAttribute("fill", "none");
+  // svgEl.setAttribute("transform", "rotate(270 0 0)");
+  const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path1.setAttribute(
+    "d",
+    "M2.5 0C1.11929 0 0 1.11929 0 2.5C0 3.70948 0.85888 4.71836 2 4.94999V9.5C2 11.433 3.567 13 5.5 13H7.29289L6.14645 14.1464L6.85355 14.8536L9.20711 12.5L6.85355 10.1464L6.14645 10.8536L7.29289 12H5.5C4.11929 12 3 10.8807 3 9.5V4.94999C4.14112 4.71836 5 3.70948 5 2.5C5 1.11929 3.88071 0 2.5 0Z"
+  );
+  path1.setAttribute("fill", "#000000");
+
+  const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path2.setAttribute(
+    "d",
+    "M8.85355 0.853554L8.14645 0.146446L5.79289 2.5L8.14645 4.85355L8.85355 4.14645L7.70711 3H9.5C10.8807 3 12 4.11929 12 5.5V10.05C10.8589 10.2816 10 11.2905 10 12.5C10 13.8807 11.1193 15 12.5 15C13.8807 15 15 13.8807 15 12.5C15 11.2905 14.1411 10.2816 13 10.05V5.5C13 3.567 11.433 2 9.5 2H7.70711L8.85355 0.853554Z"
+  );
+  path2.setAttribute("fill", "#000000");
+
+  svgEl.appendChild(path1);
+  svgEl.appendChild(path2);
+  versionControlButton.appendChild(svgEl);
+
+  versionControlButton.addEventListener(
+    "click",
+    function () {
+      if (
+        document.getElementById("viewer-container-left").style.display === "block"
+      ) {
+        document.getElementById("viewer-container-left").style.display = "none";
+        versionControlButton.classList.remove("active");
+        document.getElementById("viewer-container-left").innerHTML = "";
+      } else if (
+        document.getElementById("viewer-container-left").style.display === "none"
+      ) {
+        document.getElementById("viewer-container-left").style.display = "block";
+        document.getElementById("viewer-container-left").style.width = "47%";
+        versionControlButton.classList.add("active");
+      }
+    },
+    false
+  );
+
+  return versionControlButton;
+}
+
 function treeButton() {
   const treeButton = document.createElement("button");
   treeButton.className = "button";
@@ -392,7 +446,7 @@ export function createIfcTreeMenu() {
   caretSpan.className = "caret";
   const ulNested = document.createElement("ul");
   ulNested.className = "nested";
-
+  
   treeRoot.appendChild(caretSpan);
   treeRoot.appendChild(ulNested);
   myUL.appendChild(treeRoot);
