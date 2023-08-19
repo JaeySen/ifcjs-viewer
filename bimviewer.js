@@ -49,39 +49,19 @@ const categories = {
   IFCBUILDINGELEMENTPROXY,
 };
 
-const viewer = CreateViewer(document.getElementById("viewer-container"));
-const viewer2 = CreateViewer(document.getElementById("viewer-container2"));
+const viewerDiv = document.getElementById("viewer-container-primary");
+const viewer2Div = document.getElementById("viewer-container-secondary");
+
+const viewer = CreateViewer(viewerDiv);
+const viewer2 = CreateViewer(viewer2Div);
 
 function CreateViewer(container) {
   let viewer = new IfcViewerAPI({ container, backgroundColor: new Color(255, 255, 255) });
   viewer.axes.setAxes();
-  viewer.grid.setGrid();
+  // viewer.grid.setGrid();
 
   return viewer;
 }
-
-async function ViewerLoadIfc(viewer, url) {
-  const model = await viewer.IFC.loadIfcUrl(url);
-  await viewer.shadowDropper.renderShadow(model.modelID);
-  viewer.context.renderer.postProduction.active = true;
-
-  model.removeFromParent();
-  return model;
-}
-
-// const container = document.getElementById('container');
-
-// const components = new OBC.Components();
-
-// components.scene = new OBC.SimpleScene(components);
-// const renderer = new OBC.PostproductionRenderer(components, container);
-// components.renderer = renderer;
-// components.camera = new OBC.SimpleCamera(components);
-// components.raycaster = new OBC.SimpleRaycaster(components);
-
-// components.init();
-
-// renderer.postproduction.enabled = true;
 
 const currentUrl = window.location.href;
 const url = new URL(currentUrl);
@@ -96,7 +76,7 @@ async function loadIfc(url) {
 
   model.removeFromParent(); //for ifc categories filter
 
-  const model2 = await viewer2.IFC.loadIfcUrl(url);
+  const model2 = await viewer2.IFC.loadIfcUrl(url); 
 
   await viewer2.shadowDropper.renderShadow(model2.modelID);
   viewer2.context.renderer.postProduction.active = true;
@@ -139,26 +119,34 @@ createVersionControlPanel();
 toolbarTop();
 toolbarBottom();
 
-var vec3 = new Vector3(); // create once and reuse it!
-var vec4 = new Vector4();
+var vec3 = new Vector3();
 
 //select IFC elements
-// window.onmousemove = () => viewer.IFC.selector.prePickIfcItem();
-window.onmousemove = () => {
-  // const curVec = viewer.context.ifcCamera.cameraControls._camera.getWorldDirection(vector);
-  
-  // viewer2.grid.dispose();
-  viewer2.IFC.selector.unHighlightIfcItems();
-  
+window.onmousemove = () => viewer.IFC.selector.prePickIfcItem();
 
-  const vecView = viewer.context.ifcCamera.cameraControls.getPosition(vec3);
-  viewer2.context.ifcCamera.cameraControls.setLookAt(vecView.x, vecView.y, vecView.z, 0,0,0);
+viewerDiv.onmousedown = (e) => {
+  if (e.button === 0) {
+    viewerDiv.onmousemove = () => {
+      const vecView = viewer.context.ifcCamera.cameraControls.getPosition(vec3);
+      viewer2.context.ifcCamera.cameraControls.setLookAt(vecView.x, vecView.y, vecView.z, 0,0,0);
+    }
+  } else if (e.button === 2) {
+    const vecView = viewer.context.ifcCamera.cameraControls.getPosition(vec3);
+    viewer2.context.ifcCamera.perspectiveCamera.translateOnAxis(vecView);
+    viewer2.context.ifcCamera.cameraControls.setViewport(vecView.x, vecView.y, vecView.z);
+    viewer2.context.ifcCamera.cameraControls.setLookAt(vecView.x, vecView.y, vecView.z, vecView.x, vecView.y, vecView.z);
+  }
 
-} 
-
-window.onauxclick = () => {
-  viewer2.IFC.selector.unHighlightIfcItems();
 }
+
+
+viewer2Div.onmousedown = () => {
+  viewer2Div.onmousemove = () => {
+    const vecView = viewer2.context.ifcCamera.cameraControls.getPosition(vec3);
+    viewer.context.ifcCamera.cameraControls.setLookAt(vecView.x, vecView.y, vecView.z, 0,0,0);
+  }
+}
+
   
 
 const spans = document.querySelectorAll("span.caret");

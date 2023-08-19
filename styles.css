@@ -381,7 +381,7 @@ ul, #myUL {
     margin-left: 10px;
 }
 
-#viewer-container {
+#viewer-container-primary {
     position: fixed;
     top: 0;
     left: 0;
@@ -391,7 +391,7 @@ ul, #myUL {
     overflow: hidden;
 }
 
-#viewer-container2 {
+#viewer-container-secondary {
     position: fixed;
     top: 0;
     right: 0;
@@ -441,3 +441,7 @@ canvas + div {
     left: 0;
     z-index: 1;
 } */
+
+img {
+    visibility: hidden !important;
+}
