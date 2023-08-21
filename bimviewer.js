@@ -30,7 +30,7 @@ import {
 // import * as OBC from 'openbim-components';
 
 
-import { Color, Vector3, Vector4, Matrix4 } from "three";
+import { Color, Vector3, Vector4, Matrix4, MeshLambertMaterial, Mesh } from "three";
 
 // List of categories names
 const categories = {
@@ -66,9 +66,11 @@ const currentUrl = window.location.href;
 const url = new URL(currentUrl);
 const currentProjectID = url.searchParams.get("id"); //bimserver project id - use this to get latest revision etc
 
+var model; 
+
 async function loadIfc(url) {
   // Load the model
-  const model = await viewer.IFC.loadIfcUrl(url);
+  model = await viewer.IFC.loadIfcUrl(url);
 
   // await viewer.shadowDropper.renderShadow(model.modelID);
   // viewer.context.renderer.postProduction.active = true;
@@ -186,10 +188,6 @@ viewer2Div.onmousedown = (e) => {
 
 } 
 
-// viewer2Div.addEventListener("mouseup", () => {
-//   viewer2Div.removeEventListener("mousemove");
-// })
-
 viewer2Div.onwheel = (e) => {
   viewer.context.ifcCamera.cameraControls.enabled = false;
   const camPos = viewer2.context.ifcCamera.cameraControls.getPosition(vec3);
@@ -225,10 +223,45 @@ window.ondblclick = async () => {
   }
 };
 
-// const xrayButton = document.getElementById("XRayButton");
-// xrayButton.onclick = () => {
+const xrayButton = document.getElementById("XRayButton");
+let XRayButtonActive = false;
+xrayButton.onclick = () => {
 
-// }
+  XRayButtonActive = !XRayButtonActive;
+  // viewer.clipper.active = XRayButtonActive;
+  let meshArr = new Array();
+  meshArr = [...scene.children].filter(ent => ent.isMesh);
+
+  if (XRayButtonActive) {
+    xrayButton.classList.add("active");
+    meshArr.forEach(mesh => {
+      scene.remove(mesh);
+    } );
+  
+    viewer.IFC.loader.load(path, (ifcModel) => {
+      ifcModel.visible = false;
+  
+      const modelCopy = new Mesh(
+        ifcModel.geometry,
+        new MeshLambertMaterial({
+          transparent: true,
+          opacity: 0.1,
+          color: 0x77aaff,
+        })
+      );
+    
+      // scene.add(ifcModel);
+      scene.add(modelCopy);
+    });
+
+  } else {
+    clipButton.classList.remove("active");
+    scene.add(model);
+  }
+
+
+  
+}
 
 //set up clipping planes
 const clipButton = document.getElementById("clipPlaneButton");

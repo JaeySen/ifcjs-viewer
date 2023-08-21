@@ -665,12 +665,27 @@ export function createVersionControlPanel() {
   nameHead.innerHTML = "Model Name";
   nameHead.style = "width:70%";
   const versionHead = document.createElement("th");
-  versionHead.className = "text-center";
+  versionHead.className = "text-center"; 
   versionHead.innerHTML = "Version";
   versionHead.style = "width:20%";
   const dateHead = document.createElement("th");
   dateHead.className = "text-center";
   dateHead.innerHTML = "Date";
+
+  const firstRow = document.createElement("tr");
+
+  const firstName = document.createElement("td");
+  firstName.innerHTML = "TESTED_Simple_project_01";
+  
+  const firstVersion = document.createElement("td");
+  firstVersion.innerHTML = "V1.0";
+  
+  const firstDate = document.createElement("td");
+  firstDate.innerHTML = "Nov 30 2020";
+  
+  firstRow.appendChild(firstName);
+  firstRow.appendChild(firstVersion);
+  firstRow.appendChild(firstDate);
 
   tr.appendChild(nameHead);
   tr.appendChild(versionHead);
@@ -678,6 +693,7 @@ export function createVersionControlPanel() {
 
   thead.appendChild(tr);
   myTable.appendChild(thead);
+  myTable.append(firstRow);
 
   versionControlDiv.appendChild(myTable);
 
