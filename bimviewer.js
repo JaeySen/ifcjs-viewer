@@ -1,4 +1,3 @@
-import { Color } from "three";
 import { IfcViewerAPI } from "web-ifc-viewer";
 import {
   createCheckboxes,
@@ -31,7 +30,7 @@ import {
 // import * as OBC from 'openbim-components';
 
 
-import { Vector3, Vector4 } from "three";
+import { Color, Vector3, Vector4, Matrix4 } from "three";
 
 // List of categories names
 const categories = {
@@ -71,15 +70,15 @@ async function loadIfc(url) {
   // Load the model
   const model = await viewer.IFC.loadIfcUrl(url);
 
-  await viewer.shadowDropper.renderShadow(model.modelID);
-  viewer.context.renderer.postProduction.active = true;
+  // await viewer.shadowDropper.renderShadow(model.modelID);
+  // viewer.context.renderer.postProduction.active = true;
 
   model.removeFromParent(); //for ifc categories filter
 
   const model2 = await viewer2.IFC.loadIfcUrl(url); 
 
-  await viewer2.shadowDropper.renderShadow(model2.modelID);
-  viewer2.context.renderer.postProduction.active = true;
+  // await viewer2.shadowDropper.renderShadow(model2.modelID);
+  // viewer2.context.renderer.postProduction.active = true;
 
   // model2.removeFromParent(); //for ifc categories filter
 
@@ -120,34 +119,83 @@ toolbarTop();
 toolbarBottom();
 
 var vec3 = new Vector3();
-
+var vec4 = new Vector4();
+var mat4 = new Matrix4();
 //select IFC elements
 window.onmousemove = () => viewer.IFC.selector.prePickIfcItem();
 
+
+viewerDiv.onwheel = (e) => {
+  viewer2.context.ifcCamera.cameraControls.enabled = false;
+  const camPos = viewer.context.ifcCamera.cameraControls.getPosition(vec3);
+  viewer2.context.getCamera().position.set(camPos.x, camPos.y, camPos.z);
+
+}
+
 viewerDiv.onmousedown = (e) => {
+  viewer.context.ifcCamera.cameraControls.enabled = true;
+  viewer2.context.ifcCamera.cameraControls.enabled = true;
   if (e.button === 0) {
     viewerDiv.onmousemove = () => {
-      const vecView = viewer.context.ifcCamera.cameraControls.getPosition(vec3);
-      viewer2.context.ifcCamera.cameraControls.setLookAt(vecView.x, vecView.y, vecView.z, 0,0,0);
+      let vecc = new Vector3();
+
+      const vecPos = viewer.context.ifcCamera.cameraControls.getPosition(vec3);
+      const vecView = viewer.context.ifcCamera.cameraControls.getTarget(vecc);
+      viewer2.context.ifcCamera.cameraControls.setLookAt(vecPos.x, vecPos.y, vecPos.z, vecView.x, vecView.y, vecView.z);
     }
   } else if (e.button === 2) {
-    const vecView = viewer.context.ifcCamera.cameraControls.getPosition(vec3);
-    viewer2.context.ifcCamera.perspectiveCamera.translateOnAxis(vecView);
-    viewer2.context.ifcCamera.cameraControls.setViewport(vecView.x, vecView.y, vecView.z);
-    viewer2.context.ifcCamera.cameraControls.setLookAt(vecView.x, vecView.y, vecView.z, vecView.x, vecView.y, vecView.z);
-  }
+    viewerDiv.onmousemove = () => {
+      const vecPos = viewer.context.ifcCamera.cameraControls.getPosition(vec3);
+      viewer2.context.ifcCamera.cameraControls.enabled = false;
+      viewer2.context.getCamera().position.set(vecPos.x, vecPos.y, vecPos.z);
+    }
 
-}
-
-
-viewer2Div.onmousedown = () => {
-  viewer2Div.onmousemove = () => {
-    const vecView = viewer2.context.ifcCamera.cameraControls.getPosition(vec3);
-    viewer.context.ifcCamera.cameraControls.setLookAt(vecView.x, vecView.y, vecView.z, 0,0,0);
   }
 }
 
-  
+viewer2Div.onmousedown = (e) => {
+  viewer.context.ifcCamera.cameraControls.enabled = true;
+  viewer2.context.ifcCamera.cameraControls.enabled = true;
+  if (e.button === 0) {
+    viewer2Div.onmousemove = () => {
+      // viewer2.context.ifcCamera.cameraControls.addEventListener("update", (e) => {
+      //   let vecc = new Vector3();
+      //   const vecPos = viewer2.context.ifcCamera.cameraControls.getPosition(vec3);
+      //   const vecView = viewer2.context.ifcCamera.cameraControls.getTarget(vecc);
+      //   viewer.context.ifcCamera.cameraControls.setLookAt(vecPos.x, vecPos.y, vecPos.z, vecView.x, vecView.y, vecView.z);
+      // })
+      // TODO: add update only event, onmousedown is not exit when inside onmousemove
+      let vecc = new Vector3();
+      const vecPos = viewer2.context.ifcCamera.cameraControls.getPosition(vec3);
+      const vecView = viewer2.context.ifcCamera.cameraControls.getTarget(vecc);
+      viewer.context.ifcCamera.cameraControls.setLookAt(vecPos.x, vecPos.y, vecPos.z, vecView.x, vecView.y, vecView.z);
+
+    }
+  } else if (e.button === 2) {
+    viewer2Div.onmousemove = (event = e) => {
+      // viewer2.context.ifcCamera.cameraControls.addEventListener("update", (e) => {
+      //   const vecPos = viewer2.context.ifcCamera.cameraControls.getPosition(vec3);
+      //   viewer.context.ifcCamera.cameraControls.enabled = false;
+      //   viewer.context.getCamera().position.set(vecPos.x, vecPos.y, vecPos.z);
+      // })
+      const vecPos = viewer2.context.ifcCamera.cameraControls.getPosition(vec3);
+      viewer.context.ifcCamera.cameraControls.enabled = false;
+      viewer.context.getCamera().position.set(vecPos.x, vecPos.y, vecPos.z);
+    }
+  }
+
+} 
+
+// viewer2Div.addEventListener("mouseup", () => {
+//   viewer2Div.removeEventListener("mousemove");
+// })
+
+viewer2Div.onwheel = (e) => {
+  viewer.context.ifcCamera.cameraControls.enabled = false;
+  const camPos = viewer2.context.ifcCamera.cameraControls.getPosition(vec3);
+  viewer.context.getCamera().position.set(camPos.x, camPos.y, camPos.z);
+
+}
 
 const spans = document.querySelectorAll("span.caret");
 
