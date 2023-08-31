@@ -238,10 +238,10 @@ a {
 }
 
 .simple-card-container-home {
-    display: flex;
+    display: inline-flex;
     justify-content: left;
     position: fixed;
-    width: 100%;
+    width: 10%;
 }
 
 /* From uiverse.io by @adamgiebl */
@@ -455,3 +455,11 @@ img {
     z-index: 6;
     background-size: contain;
 }
+
+#map {
+    position: absolute;
+    top: 0;
+    left: 40%;
+    width: 20%;
+    height: 50%;
+  }

@@ -30,7 +30,11 @@ import {
 // import * as OBC from 'openbim-components';
 
 
-import { Color, Vector3, Vector4, Matrix4, MeshLambertMaterial, Mesh } from "three";
+import { Color, Vector3, Vector4, Matrix4, MeshLambertMaterial, Mesh, DirectionalLight,
+  AmbientLight,
+  PerspectiveCamera,
+  WebGLRenderer,
+  Scene } from "three";
 
 // List of categories names
 const categories = {
@@ -121,8 +125,123 @@ toolbarTop();
 toolbarBottom();
 
 var vec3 = new Vector3();
-var vec4 = new Vector4();
-var mat4 = new Matrix4();
+
+mapboxgl.accessToken =
+  "pk.eyJ1IjoiZGluaHR1MDgwNjAxIiwiYSI6ImNsbGxwcnRlcTI4d28zY21rYmh6Z205eHQifQ.XyjAMhumCi9ztQYI-1jLSw";
+const map = new mapboxgl.Map({
+  container: "map", // chứa map
+  style: "mapbox://styles/mapbox/streets-v11", // style url
+  zoom: 17.48, // mức zoom
+  center: [106.7188358, 10.7886464], // toạ độ khi map render lần đầu
+  pitch: 75, // góc nghiêng của map
+  bearing: -80, // góc quay của bản đồ
+  antialias: true,
+});
+
+const modelOrigin = [106.7188358, 10.7886464];
+const modelAltitude = 0;
+const modelRotate = [Math.PI / 2, 0.72, 0];
+
+// translate to map coordinates
+const modelAsMercatorCoordinate = mapboxgl.MercatorCoordinate.fromLngLat(
+  modelOrigin,
+  modelAltitude
+);
+
+const modelTransform = {
+  translateX: modelAsMercatorCoordinate.x,
+  translateY: modelAsMercatorCoordinate.y,
+  translateZ: modelAsMercatorCoordinate.z,
+  rotateX: modelRotate[0],
+  rotateY: modelRotate[1],
+  rotateZ: modelRotate[2],
+  scale: modelAsMercatorCoordinate.meterInMercatorCoordinateUnits(),
+};
+
+const mapScene = new Scene();
+const camera = new PerspectiveCamera();
+const renderer = new WebGLRenderer({
+  // here we inject our Three.js mapScene into Mapbox
+  canvas: map.getCanvas(),
+  antialias: true,
+});
+renderer.autoClear = false;
+
+const customLayer = {
+  id: "3d-model",
+  type: "custom",
+  renderingMode: "3d",
+
+  onAdd: function () {
+    //load model
+    const ifcLoader = new IFCLoader();
+    ifcLoader.ifcManager.setWasmPath("./");
+    ifcLoader.load(path, function (model) {
+      mapScene.add(model);
+    });
+
+    //add lighting
+    const directionalLight = new DirectionalLight(0x404040);
+    const directionalLight2 = new DirectionalLight(0x404040);
+    const ambientLight = new AmbientLight(0x404040, 3);
+    directionalLight.position.set(0, -70, 100).normalize();
+    directionalLight2.position.set(0, 70, 100).normalize();
+
+    mapScene.add(directionalLight, directionalLight2, ambientLight);
+  },
+
+  render: function (gl, matrix) {
+    //apply model transformations
+    const rotationX = new Matrix4().makeRotationAxis(
+      new Vector3(1, 0, 0),
+      modelTransform.rotateX
+    );
+    const rotationY = new Matrix4().makeRotationAxis(
+      new Vector3(0, 1, 0),
+      modelTransform.rotateY
+    );
+    const rotationZ = new Matrix4().makeRotationAxis(
+      new Vector3(0, 0, 1),
+      modelTransform.rotateZ
+    );
+
+    const m = new Matrix4().fromArray(matrix);
+    const l = new Matrix4()
+      .makeTranslation(
+        modelTransform.translateX,
+        modelTransform.translateY,
+        modelTransform.translateZ
+      )
+      .scale(
+        new Vector3(
+          modelTransform.scale,
+          -modelTransform.scale,
+          modelTransform.scale
+        )
+      )
+      .multiply(rotationX)
+      .multiply(rotationY)
+      .multiply(rotationZ);
+
+    camera.projectionMatrix = m.multiply(l);
+    renderer.resetState();
+    renderer.render(mapScene, camera);
+    map.triggerRepaint();
+  },
+};
+
+map.on("style.load", () => {
+  map.addLayer(customLayer, "waterway-label");
+});
+
+const screenShotDiv = document.getElementById("screenshot");
+const screenShotButton = document.getElementById("screenShotButton");
+screenShotButton.onmousedown = async () => {
+  const screenShotUrl = await viewer.context.renderer.newScreenshot();
+  // console.log(screenShotUrl);
+  screenShotDiv.style.backgroundImage = `url(${screenShotUrl})`
+}
+
 //select IFC elements
 window.onmousemove = () => viewer.IFC.selector.prePickIfcItem();
 
@@ -203,6 +322,14 @@ for (const span of spans) {
   })
 }
 
+propertiesButton.onmousedown = () => {
+  if (propertiesButton.classList.contains("active")) {
+    viewer.IFC.selector.unpickIfcItems();
+    // viewer.IFC.selector.unHighlightIfcItems();
+
+  }
+}
+
 window.ondblclick = async () => {
   const result = await viewer.IFC.selector.pickIfcItem(); //highlightIfcItem hides all other elements
   if (!result) return;
@@ -236,9 +363,10 @@ xrayButton.onclick = () => {
     xrayButton.classList.add("active");
     meshArr.forEach(mesh => {
       scene.remove(mesh);
-    } );
+    });
   
     viewer.IFC.loader.load(path, (ifcModel) => {
+      console.log("ifcModel", ifcModel);
       ifcModel.visible = false;
   
       const modelCopy = new Mesh(
@@ -258,9 +386,6 @@ xrayButton.onclick = () => {
     clipButton.classList.remove("active");
     scene.add(model);
   }
-
-
-  
 }
 
 //set up clipping planes
@@ -306,7 +431,7 @@ const annotationsButton = document.getElementById("annotationsButton");
 let measurementsActive = false;
 
 annotationsButton.onclick = () => {
-  viewer.dimensions.active = true;
+  // viewer.dimensions.active = true;
   viewer.dimensions.previewActive = true;
   measurementsActive = !measurementsActive;
 
