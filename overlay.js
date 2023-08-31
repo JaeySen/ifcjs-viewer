@@ -37,6 +37,7 @@ export function toolbarBottom() {
   const toolbar = document.createElement("div");
   toolbar.className = "toolbar";
 
+  toolbar.appendChild(screenShotButton());
   toolbar.appendChild(XRayButton());
   toolbar.appendChild(versionControlButton());
   toolbar.appendChild(treeButton());
@@ -278,6 +279,44 @@ function clipPlaneButton() {
   clipPlaneButton.appendChild(svgEl);
 
   return clipPlaneButton;
+}
+
+function screenShotButton() {
+  const screenShotButton = document.createElement("button");
+  screenShotButton.className = "button";
+  screenShotButton.id = "screenShotButton";
+
+  const svgEl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svgEl.setAttribute("width", "15");
+  svgEl.setAttribute("height", "15");
+  svgEl.setAttribute("viewBox", "0 0 512 512");
+  // svgEl.setAttribute("fill", "#000000");
+  
+  const g1 = document.createElement("g");
+  g1.id = "Page-1";
+  g1.setAttribute("stroke", "none");
+  g1.setAttribute("stroke-width", "1");
+  g1.setAttribute("fill", "none");
+  g1.setAttribute("fill-rule", "evenodd");
+
+  const g2 = document.createElement("g");
+  g2.id = "drop";
+  g2.setAttribute("fill", "#000000");
+  g2.setAttribute("transform", "translate(42.666667, 42.666667)");
+
+  const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path1.setAttribute(
+    "d",
+    "M106.666667,7.10542736e-15 L106.666667,64 L362.666667,64 L362.666667,320 L426.666667,320 L426.666667,362.666667 L362.666667,362.666667 L362.666667,426.666667 L320,426.666667 L320,362.666667 L64,362.666667 L64,7.10542736e-15 L106.666667,7.10542736e-15 Z M166.336,232.64 L106.666,296.422 L106.666667,320 L320,320 L320,308.725 L274.432,263.168 L235.659405,301.959634 L166.336,232.64 Z M320,106.666667 L106.666667,106.666667 L106.666,233.982 L165.332883,171.293333 L235.648,241.621333 L274.447284,202.831976 L320,248.385 L320,106.666667 Z M245.333333,128 C263.006445,128 277.333333,142.326888 277.333333,160 C277.333333,177.673112 263.006445,192 245.333333,192 C227.660221,192 213.333333,177.673112 213.333333,160 C213.333333,142.326888 227.660221,128 245.333333,128 Z M64,64 L64,106.666667 L7.10542736e-15,106.666667 L7.10542736e-15,64 L64,64 Z"
+  );
+  path1.id = "Combined-Shape";
+
+  g2.appendChild(path1);
+  g1.appendChild(g2);
+  svgEl.appendChild(g1);
+  screenShotButton.appendChild(svgEl);
+
+  return screenShotButton;
 }
 
 function XRayButton() {

@@ -445,3 +445,13 @@ canvas + div {
 img {
     visibility: hidden !important;
 }
+
+#screenshot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20%;
+    height: 20%;
+    z-index: 6;
+    background-size: contain;
+}
